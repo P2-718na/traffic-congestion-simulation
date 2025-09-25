@@ -7,10 +7,10 @@
 void check_CUDA();
 
 template<int _NM>
-__global__ class NaiveSimulation {
+class NaiveSimulation {
+
     static constexpr int M{_NM};
 
-private:
     int N;
     int tMax;
 
@@ -25,16 +25,37 @@ private:
     curandGenerator_t generator;
 
 public:
-    NaiveSimulation();
-    ~NaiveSimulation();
-    NaiveSimulation(NaiveSimulation &) = delete;
-
     std::vector<int> simulate();
     void move_agents();
 
     bool are_there_failures{false};
 
-    void __global__ move_agent(float choices[]);
-    int __global__  map_one_avalanche_size(std::vector<int>& congested_nodes);
+    void move_agent(float choices[]);
+    int map_one_avalanche_size(std::vector<int>& congested_nodes);
+
+    // These guys need to be compiled here otherwise things break!
+
+    NaiveSimulation() {
+        curandCreateGenerator(&generator, CURAND_RNG_PSEUDO_DEFAULT);
+        curandSetPseudoRandomGeneratorSeed(generator, 0ULL);
+        // TODO
+
+        /*
+       Simulate[rateMatrix_, nodeThresholds_, startingAgentPositions_,
+          maxSteps_] :=
+         Module[{MoveAgents, AreThereFailures , ComputeAvalancheSize, i,
+           nNodes, nAgents, carCountsByNode, agentPositions,
+           possibleAgentPositions, failedNodes},
+          nNodes = Length[rateMatrix];
+            agentPositions = (
+                 Assert[Total[rateMatrix[[;; , #]]] == 1];
+
+       */
+
+    }
+    ~NaiveSimulation() {
+        curandDestroyGenerator(generator);
+    }
+    NaiveSimulation(NaiveSimulation &) = delete;
 };
 

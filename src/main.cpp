@@ -9,6 +9,6 @@ int main()
     int t = 20; // Max simulation length
 
 
-    //checkCUDA();
-    NaiveSimulation<10> sim;
+    check_CUDA();
+    NaiveSimulation<10> sim{};
 }

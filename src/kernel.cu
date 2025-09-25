@@ -13,33 +13,6 @@ void check_CUDA() {
     }
 }
 
-template<int _NM>
-NaiveSimulation<_NM>::NaiveSimulation() {
- curandCreateGenerator(&generator, CURAND_RNG_PSEUDO_DEFAULT);
- curandSetPseudoRandomGeneratorSeed(generator, 0ULL);
- // TODO
-
- /*
-Simulate[rateMatrix_, nodeThresholds_, startingAgentPositions_,
-   maxSteps_] :=
-  Module[{MoveAgents, AreThereFailures , ComputeAvalancheSize, i,
-    nNodes, nAgents, carCountsByNode, agentPositions,
-    possibleAgentPositions, failedNodes},
-   nNodes = Length[rateMatrix];
-     agentPositions = (
-          Assert[Total[rateMatrix[[;; , #]]] == 1];
-
-*/
-
-}
-
-
-template<int _NM>
-NaiveSimulation<_NM>::~NaiveSimulation() {
- curandDestroyGenerator(generator);
-}
-
-
 // Move a single agent.
 // Agent position is stored into positions array, with index the same as
 // block id
@@ -72,7 +45,7 @@ void NaiveSimulation<_NM>::move_agents() {
 }
 
 template<int _NM>
-void __global__ NaiveSimulation<_NM>::move_agent(float choices[]) {
+void NaiveSimulation<_NM>::move_agent(float choices[]) {
  const int idx = blockIdx.x;
 
  std::printf("%f\n", choices[idx]);
@@ -83,7 +56,7 @@ void __global__ NaiveSimulation<_NM>::move_agent(float choices[]) {
 }
 
 template<int _NM>
-int __global__ NaiveSimulation<_NM>::map_one_avalanche_size(std::vector<int>& congested_nodes) {
+int NaiveSimulation<_NM>::map_one_avalanche_size(std::vector<int>& congested_nodes) {
  // TODO
 
  /*
