@@ -7,5 +7,6 @@ ENDIF ()
 
 PROJECT(traffic LANGUAGES CXX CUDA)
 FIND_PACKAGE(CUDAToolkit)
+include_directories( /usr/local/cuda-13.0/targets/x86_64-linux/include )
 
 ADD_SUBDIRECTORY(src)
