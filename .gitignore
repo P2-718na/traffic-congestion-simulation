@@ -1,6 +1,8 @@
 CMakeCache.txt
 CMakeFiles
 
+cmake-build-*
+
 src/cache
 .idea
 # Logs
