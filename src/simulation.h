@@ -1,5 +1,6 @@
 #pragma once
 
+#include "link.h"
 #include "kernel.h"
 #include <curand.h>
 #include <vector>
@@ -16,57 +17,65 @@ class NaiveSimulation {
   int N; // number of agents
   int tMax; // max simulation time
 
-  // Dynamic size device stuff
-  thrust::device_vector<int> congested_nodes;
-  thrust::device_vector<int> positions;
-  thrust::device_vector<float>* precomputed_cumulative_rates; // M*(variable)
+  // Dynamic size device stuff DOES NOT EXISTS. IT IS NOT REAL. YOU WILL BE HURT.
+  // // cannot use  thrust::device_vector<int>, no push_back in device code
+  int* positions;
+  Link** precomputed_cumulative_rates; // M*(variable)
 
   // Static-size device stuff. Although not statically allocated. lol.
+  float* choices;
   int* thresholds{}; // M
+  int* counts{}; // M
   float** rate_matrix{}; // M*M
   bool* are_there_failures{}; // 1
 
   // Host vars
   curandGenerator_t generator;
 
-public: //todo this i here just for testing
+public: //todo this is here just for testing
   inline void move_agents() {
-    float* choices;
-    cudaMalloc(&choices, N*sizeof(float));
-
     curandGenerateUniform(generator, choices, N);
-    //move_agent<<<1, N>>>(choices); TODO
-
-    cudaFree(choices);
+    move_agent<<<N, 1, 1>>>(positions, precomputed_cumulative_rates, choices, thresholds, counts, are_there_failures);
+    cudaDeviceSynchronize();
   }
 
 public:
-  inline NaiveSimulation(int M, int N, int tMax, vector<int>& thresholds, vector< vector<float> >& rate_matrix) : M{M}, N{N}, tMax{tMax} {
+  inline NaiveSimulation(int M, int N, int tMax, vector<int> thresholds, vector< vector<float> > rate_matrix) : M{M}, N{N}, tMax{tMax} {
     curandCreateGenerator(&generator, CURAND_RNG_PSEUDO_DEFAULT);
     curandSetPseudoRandomGeneratorSeed(generator, 0ULL);
 
-    assert(M == thresholds.size());
-    assert(M == rate_matrix.size());
-    assert(M == rate_matrix[1].size()); // we should check for all elements...
-
+    cudaMalloc(&(this->positions), M*sizeof(int));
+    cudaMalloc(&(this->precomputed_cumulative_rates), M*sizeof(thrust::device_vector<Link>));
+    cudaMalloc(&choices, N*sizeof(float));
     cudaMalloc(&(this->thresholds), M*sizeof(int));
+    cudaMalloc(&(this->counts), M*sizeof(int));
     cudaMalloc(&(this->rate_matrix), M*M*sizeof(int));
     cudaMalloc(&(this->are_there_failures), sizeof(bool));
-
-
     cudaMemcpy(this->thresholds, &thresholds.front(), M*sizeof(float), cudaMemcpyHostToDevice);
-    const bool temp{false};
-    cudaMemcpy(are_there_failures, &temp, sizeof(bool), cudaMemcpyHostToDevice);
-
+    cudaMemset(this->counts, 0, M*sizeof(int));
+    cudaMemset(are_there_failures, 0, sizeof(bool));
     for (int i = 0; i < M; ++i)
     {
      cudaMemcpy(this->rate_matrix + i, &rate_matrix[i].front(), M*sizeof(float), cudaMemcpyHostToDevice);
     }
+
+    curandGenerateUniform(generator, choices, N);
+    randomize_positions<<<N, 1, 1>>>(M, positions, choices);
+    cudaDeviceSynchronize();
+
+    compute_counts<<<N, 1, 1>>>(positions, counts);
+    compute_cumulative_rates<<<M, 1, 1>>>(M, this->rate_matrix, precomputed_cumulative_rates);
+
+    cudaDeviceSynchronize();
   }
   ~NaiveSimulation() {
     curandDestroyGenerator(generator);
 
+    cudaFree(positions);
+    cudaFree(precomputed_cumulative_rates);
+    cudaFree(choices);
     cudaFree(thresholds);
+    cudaFree(counts);
     cudaFree(rate_matrix);
     cudaFree(are_there_failures);
   }
@@ -88,6 +97,16 @@ public:
     // todo copy to vector
     // computeAvalanches...
     return {};
+  }
+
+  inline void print_positions()
+  {
+      int* counts = (int*)malloc(M*sizeof(int));
+      cudaMemcpy(counts, this->counts, M*sizeof(int), cudaMemcpyDeviceToHost);
+      for (int i = 0; i < M; ++i)
+      {
+          printf("%i -> %i\n", i, counts[i]);
+      }
   }
 };
 
