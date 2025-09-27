@@ -15,4 +15,6 @@ int main()
     sim.move_agents();
     sim.print_positions();
     printf("Done!\n");
+
+    test_random(10);
 }

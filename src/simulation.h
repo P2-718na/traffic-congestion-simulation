@@ -20,6 +20,7 @@ class NaiveSimulation {
   // Dynamic size device stuff DOES NOT EXISTS. IT IS NOT REAL. YOU WILL BE HURT.
   // // cannot use  thrust::device_vector<int>, no push_back in device code
   int* positions;
+  int* asd;
   Link** precomputed_cumulative_rates; // M*(variable)
 
   // Static-size device stuff. Although not statically allocated. lol.
@@ -44,19 +45,19 @@ public:
     curandCreateGenerator(&generator, CURAND_RNG_PSEUDO_DEFAULT);
     curandSetPseudoRandomGeneratorSeed(generator, 0ULL);
 
-    cudaMalloc(&(this->positions), M*sizeof(int));
+    cudaMalloc(&(this->positions), N*sizeof(int));
     cudaMalloc(&(this->precomputed_cumulative_rates), M*sizeof(thrust::device_vector<Link>));
     cudaMalloc(&choices, N*sizeof(float));
     cudaMalloc(&(this->thresholds), M*sizeof(int));
     cudaMalloc(&(this->counts), M*sizeof(int));
     cudaMalloc(&(this->rate_matrix), M*M*sizeof(int));
     cudaMalloc(&(this->are_there_failures), sizeof(bool));
-    cudaMemcpy(this->thresholds, &thresholds.front(), M*sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(this->thresholds, &thresholds, M*sizeof(float), cudaMemcpyHostToDevice);
     cudaMemset(this->counts, 0, M*sizeof(int));
     cudaMemset(are_there_failures, 0, sizeof(bool));
     for (int i = 0; i < M; ++i)
     {
-     cudaMemcpy(this->rate_matrix + i, &rate_matrix[i].front(), M*sizeof(float), cudaMemcpyHostToDevice);
+     cudaMemcpy(this->rate_matrix + i, &rate_matrix[i], M*sizeof(float), cudaMemcpyHostToDevice);
     }
 
     curandGenerateUniform(generator, choices, N);
@@ -101,11 +102,12 @@ public:
 
   inline void print_positions()
   {
-      int* counts = (int*)malloc(M*sizeof(int));
-      cudaMemcpy(counts, this->counts, M*sizeof(int), cudaMemcpyDeviceToHost);
-      for (int i = 0; i < M; ++i)
+      print_array<<<N, 1, 1>>>(positions);
+      int* positions = (int*)malloc(N*sizeof(int));
+      cudaMemcpy(positions, this->positions, N*sizeof(int), cudaMemcpyDeviceToHost);
+      for (int i = 0; i < N; ++i)
       {
-          printf("%i -> %i\n", i, counts[i]);
+          printf("%i -> %i\n", i, positions[i]);
       }
   }
 };
