@@ -4,7 +4,6 @@
 #include "kernel.h"
 #include <curand.h>
 #include <vector>
-#include <thrust/device_vector.h>
 #include <cuda_runtime.h>
 
 using namespace std;
@@ -21,13 +20,14 @@ class NaiveSimulation {
   // // cannot use  thrust::device_vector<int>, no push_back in device code
   int* positions;
   int* asd;
-  Link** precomputed_cumulative_rates; // M*(variable)
+
+  Link*/***/ precomputed_cumulative_rates; // M*(variable)
+  float*/***/ rate_matrix; // M*M
 
   // Static-size device stuff. Although not statically allocated. lol.
   float* choices;
-  int* thresholds{}; // M
-  int* counts{}; // M
-  float** rate_matrix{}; // M*M
+  int* thresholds; // M
+  int* counts; // M
   bool* are_there_failures{}; // 1
 
   // Host vars
@@ -36,7 +36,7 @@ class NaiveSimulation {
 public: //todo this is here just for testing
   inline void move_agents() {
     curandGenerateUniform(generator, choices, N);
-    move_agent<<<N, 1, 1>>>(positions, precomputed_cumulative_rates, choices, thresholds, counts, are_there_failures);
+    move_agent<<<N, 1, 1>>>(M, positions, precomputed_cumulative_rates, choices, thresholds, counts, are_there_failures);
     cudaDeviceSynchronize();
   }
 
@@ -44,9 +44,10 @@ public:
   inline NaiveSimulation(int M, int N, int tMax, vector<int> thresholds, vector< vector<float> > rate_matrix) : M{M}, N{N}, tMax{tMax} {
     curandCreateGenerator(&generator, CURAND_RNG_PSEUDO_DEFAULT);
     curandSetPseudoRandomGeneratorSeed(generator, 0ULL);
+    cudaDeviceSynchronize();
 
     cudaMalloc(&(this->positions), N*sizeof(int));
-    cudaMalloc(&(this->precomputed_cumulative_rates), M*sizeof(thrust::device_vector<Link>));
+    cudaMalloc(&(this->precomputed_cumulative_rates), M*M*sizeof(Link));
     cudaMalloc(&choices, N*sizeof(float));
     cudaMalloc(&(this->thresholds), M*sizeof(int));
     cudaMalloc(&(this->counts), M*sizeof(int));
@@ -55,30 +56,22 @@ public:
     cudaMemcpy(this->thresholds, &thresholds, M*sizeof(float), cudaMemcpyHostToDevice);
     cudaMemset(this->counts, 0, M*sizeof(int));
     cudaMemset(are_there_failures, 0, sizeof(bool));
-    for (int i = 0; i < M; ++i)
+    for (int from = 0; from < M; ++from)
     {
-     cudaMemcpy(this->rate_matrix + i, &rate_matrix[i], M*sizeof(float), cudaMemcpyHostToDevice);
+      cudaMemcpy(this->rate_matrix + (from*M), &rate_matrix[from].front(), M*sizeof(float), cudaMemcpyHostToDevice);
     }
-
     curandGenerateUniform(generator, choices, N);
+    cudaDeviceSynchronize(); // For some reason memset is async lol diocane
+
     randomize_positions<<<N, 1, 1>>>(M, positions, choices);
-    cudaDeviceSynchronize();
+    cudaDeviceSynchronize(); // Counts need positions to be set
 
     compute_counts<<<N, 1, 1>>>(positions, counts);
     compute_cumulative_rates<<<M, 1, 1>>>(M, this->rate_matrix, precomputed_cumulative_rates);
-
     cudaDeviceSynchronize();
   }
   ~NaiveSimulation() {
-    curandDestroyGenerator(generator);
-
-    cudaFree(positions);
-    cudaFree(precomputed_cumulative_rates);
-    cudaFree(choices);
-    cudaFree(thresholds);
-    cudaFree(counts);
-    cudaFree(rate_matrix);
-    cudaFree(are_there_failures);
+    //curandDestroyGenerator(generator);
   }
   NaiveSimulation(NaiveSimulation &) = delete;
 
@@ -102,13 +95,10 @@ public:
 
   inline void print_positions()
   {
-      print_array<<<N, 1, 1>>>(positions);
-      int* positions = (int*)malloc(N*sizeof(int));
-      cudaMemcpy(positions, this->positions, N*sizeof(int), cudaMemcpyDeviceToHost);
-      for (int i = 0; i < N; ++i)
-      {
-          printf("%i -> %i\n", i, positions[i]);
-      }
+    printf("Positions:\n");
+    print_array<<<N, 1, 1>>>(positions);
+    cudaDeviceSynchronize();
+    printf("End of list\n");
   }
 };
 
