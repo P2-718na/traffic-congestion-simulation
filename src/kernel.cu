@@ -131,7 +131,7 @@ void test_sim()
 void naive_sim_from_file()
 {
   int M = 2000;
-  int N = 100000;
+  int N = 10000;
   int t = 20; // Max simulation length
 
   std::ifstream thresh_file("../../data/thresholds.txt");
@@ -152,7 +152,10 @@ void naive_sim_from_file()
   }
   printf("Starting simulation. lol.\n");
   NaiveSimulation sim{M, N, t, thresholds, rates};
-  sim.simulate();
-  sim.print_positions();
+  for (int i = 0; i < 1000; ++i)
+  {
+    sim.simulate();
+    //sim.print_positions();
+  }
   printf("Done!\n");
 }
