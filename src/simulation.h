@@ -5,6 +5,7 @@
 #include <curand.h>
 #include <vector>
 #include <cuda_runtime.h>
+#include <cstdio>
 
 using namespace std;
 
@@ -28,7 +29,7 @@ class NaiveSimulation {
   float* choices;
   int* thresholds; // M
   int* counts; // M
-  bool* are_there_failures{}; // 1
+  bool* are_there_failures; // 1
 
   // Host vars
   curandGenerator_t generator;
@@ -51,9 +52,10 @@ public:
     cudaMalloc(&choices, N*sizeof(float));
     cudaMalloc(&(this->thresholds), M*sizeof(int));
     cudaMalloc(&(this->counts), M*sizeof(int));
-    cudaMalloc(&(this->rate_matrix), M*M*sizeof(int));
+    cudaMalloc(&(this->rate_matrix), M*M*sizeof(float));
     cudaMalloc(&(this->are_there_failures), sizeof(bool));
-    cudaMemcpy(this->thresholds, &thresholds, M*sizeof(float), cudaMemcpyHostToDevice);
+
+    cudaMemcpy(this->thresholds, &thresholds.front(), M*sizeof(float), cudaMemcpyHostToDevice);
     cudaMemset(this->counts, 0, M*sizeof(int));
     cudaMemset(are_there_failures, 0, sizeof(bool));
     for (int from = 0; from < M; ++from)
@@ -75,16 +77,26 @@ public:
   }
   NaiveSimulation(NaiveSimulation &) = delete;
 
-  inline std::vector<int> simulate() {
+  inline std::vector<int> simulate(bool print = false) {
+    bool has_failed;
+
     for (int t = 0; t < tMax; ++t) {
       move_agents();
 
-      if (are_there_failures) {
+      cudaMemcpy(&has_failed, are_there_failures, sizeof(bool), cudaMemcpyDeviceToHost);
+
+      if (print)
+      {
+        print_positions();
+      }
+
+      if (has_failed) {
+        printf("NO %i\n", has_failed);
           break;
       }
     }
 
-    if (!are_there_failures) {
+    if (!has_failed) {
       return {};
     }
 
