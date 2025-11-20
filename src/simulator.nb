@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       154,          7]
-NotebookDataLength[     81363,       1834]
-NotebookOptionsPosition[     76516,       1746]
-NotebookOutlinePosition[     76917,       1762]
-CellTagsIndexPosition[     76874,       1759]
+NotebookDataLength[     76059,       1755]
+NotebookOptionsPosition[     70999,       1663]
+NotebookOutlinePosition[     71400,       1679]
+CellTagsIndexPosition[     71357,       1676]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1612,135 +1612,52 @@ Cell[BoxData[{
       RowBox[{"x", ",", " ", "1", ",", " ", 
        RowBox[{"Length", "@", "res"}]}], "}"}]}], "]"}], "  ", "/", "M", 
    "\[IndentingNewLine]"}]}]}], "Input",
- CellChangeTimes->{{3.9715183084708347`*^9, 3.971518428479433*^9}},
+ CellChangeTimes->{{3.9715183084708347`*^9, 3.971518428479433*^9}, 
+   3.971518593019968*^9},
  CellLabel->
   "In[387]:=",ExpressionUUID->"ffaa09c9-98b6-3045-a2d3-97c1e201ce23"],
 
 Cell[BoxData[
- DynamicModuleBox[{Progress`ProgressDump`forceRedraw$$ = {{}, {}}, 
-  Progress`ProgressDump`open$$ = True, Progress`ProgressDump`clock$$ = 2, 
-  Progress`ProgressDump`maxTime$$ = DirectedInfinity[1]}, 
-  OverlayBox[{
-   AnimatorBox[Dynamic[Progress`ProgressDump`clock$$], {2., 
-     DirectedInfinity[1], 1.},
-    AnimationRate->1,
-    AnimationRunTime->0.23727989196777344`,
-    AnimationTimeIndex->0.23727989196777344`,
-    AppearanceElements->None,
-    ImageSize->{1, 1}], 
-   DynamicWrapperBox[
-    DynamicBox[ToBoxes[
-      Progress`GenerateProgressPanel[{
-       "Progress" :> Parallel`Combine`Private`progress, "Details" :> 
-        Parallel`Combine`Private`details, "Times" :> 
-        Parallel`Combine`Private`times}, <|{
-        "DelayedTask" -> ScheduledTaskObject[42, 
-           HoldForm[If[
-              AssociationQ[Progress`ProgressDump`this$state$1633331], 
-              AppendTo[Progress`ProgressDump`this$state$1633331, 
-                Progress`ProgressDump`CreateProgressState[
-                Progress`ProgressDump`parameters$1633331, 
-                 Progress`ProgressDump`info$1633331, ProgressReporting -> 
-                 Automatic, "Title" -> "ParallelTable", 
-                 "Buttons" -> <|
-                  "Stop" :> (Parallel`Protected`$progressStop = True)|>, 
-                 UpdateInterval -> 1, "ConsoleSupport" -> False, 
-                 "TimeEstimate" -> None]]; Null, 
-              Progress`ProgressDump`this$state$1633331 = 
-              Progress`ProgressDump`CreateProgressState[
-               Progress`ProgressDump`parameters$1633331, 
-                Progress`ProgressDump`info$1633331, ProgressReporting -> 
-                Automatic, "Title" -> "ParallelTable", 
-                "Buttons" -> <|
-                 "Stop" :> (Parallel`Protected`$progressStop = True)|>, 
-                UpdateInterval -> 1, "ConsoleSupport" -> False, 
-                "TimeEstimate" -> None]]; 
-            Progress`ProgressDump`ProgressInit[
-             Progress`ProgressDump`this$state$1633331]; Null], {2, 1}, 
-           Automatic, True, "AutoRemove" -> False, "EpilogFunction" :> Null, 
-           "TaskGroup" -> "Global`"], "State" :> 
-         Progress`ProgressDump`this$state$1633331, "Title" -> "ParallelTable",
-          "Type" -> "Grid", "Environment" -> "Notebook", 
-         "Parameters" -> {
-          "Progress" :> Parallel`Combine`Private`progress, "Details" :> 
-           Parallel`Combine`Private`details, "Times" :> 
-           Parallel`Combine`Private`times}, "PreemptibleQ" -> True, 
-         "ConsoleQ" -> False, "Evaluator" -> "Local", "EvaluationCell" -> 
-         CellObject[
-          "ffaa09c9-98b6-3045-a2d3-97c1e201ce23", 
-           "2825398f-e52b-5c4b-b17d-040ab1dc32e7"], "TimeStart" -> 
-         3.9715220300932111`17.351531965090153*^9, "TimeStartLocal" -> 
-         3.9715220300932111`17.351531965090153*^9, "InitialTimeEstimate" -> 
-         Indeterminate, "UpdateInterval" -> 1, "OuterUpdateInterval" -> 1, 
-         "Buttons" -> <|"Stop" :> (Parallel`Protected`$progressStop = True)|>,
-          "Optional" -> {}, "ContainerQ" -> False, "CreateContainerQ" -> 
-         False, "CurrentContainer" -> None, "PreviousContainer" -> None, 
-         "ContainerName" -> None, "Cell" -> 
-         Hold[Progress`ProgressDump`cell$1633457], "Clock" :> 
-         Dynamic[Progress`ProgressDump`clock$$], "Redraw" -> 
-         Progress`ProgressDump`forceRedraw$$, "Open" :> 
-         Dynamic[Progress`ProgressDump`open$$]}|>], StandardForm],
-     ImageSizeCache->{350., {42.5830078125, 48.7822265625}},
-     TrackedSymbols:>{Progress`ProgressDump`forceRedraw$$}], Refresh[
-    Progress`ProgressDump`forceRedraw$$ = 
-     With[{Progress`ProgressDump`values = Quiet[
-          
-          Values[{"Progress" :> Parallel`Combine`Private`progress, "Details" :> 
-            Parallel`Combine`Private`details, "Times" :> 
-            Parallel`Combine`Private`times}]]}, 
-       Map[
-       Position[Progress`ProgressDump`values, #, Infinity]& , {
-        None, Automatic}]], UpdateInterval -> 
-     Lookup[<|"DelayedTask" -> ScheduledTaskObject[42, 
-          HoldForm[If[
-             AssociationQ[Progress`ProgressDump`this$state$1633331], 
-             AppendTo[Progress`ProgressDump`this$state$1633331, 
-               Progress`ProgressDump`CreateProgressState[
-               Progress`ProgressDump`parameters$1633331, 
-                Progress`ProgressDump`info$1633331, ProgressReporting -> 
-                Automatic, "Title" -> "ParallelTable", 
-                "Buttons" -> <|
-                 "Stop" :> (Parallel`Protected`$progressStop = True)|>, 
-                UpdateInterval -> 1, "ConsoleSupport" -> False, 
-                "TimeEstimate" -> None]]; Null, 
-             Progress`ProgressDump`this$state$1633331 = 
-             Progress`ProgressDump`CreateProgressState[
-              Progress`ProgressDump`parameters$1633331, 
-               Progress`ProgressDump`info$1633331, ProgressReporting -> 
-               Automatic, "Title" -> "ParallelTable", 
-               "Buttons" -> <|
-                "Stop" :> (Parallel`Protected`$progressStop = True)|>, 
-               UpdateInterval -> 1, "ConsoleSupport" -> False, "TimeEstimate" -> 
-               None]]; Progress`ProgressDump`ProgressInit[
-            Progress`ProgressDump`this$state$1633331]; Null], {2, 1}, 
-          Automatic, True, "AutoRemove" -> False, "EpilogFunction" :> Null, 
-          "TaskGroup" -> "Global`"], "State" :> 
-        Progress`ProgressDump`this$state$1633331, "Title" -> "ParallelTable", 
-        "Type" -> "Grid", "Environment" -> "Notebook", 
-        "Parameters" -> {
-         "Progress" :> Parallel`Combine`Private`progress, "Details" :> 
-          Parallel`Combine`Private`details, "Times" :> 
-          Parallel`Combine`Private`times}, "PreemptibleQ" -> True, "ConsoleQ" -> 
-        False, "Evaluator" -> "Local", "EvaluationCell" -> 
-        CellObject[
-         "ffaa09c9-98b6-3045-a2d3-97c1e201ce23", 
-          "2825398f-e52b-5c4b-b17d-040ab1dc32e7"], "TimeStart" -> 
-        3.9715220300932111`17.351531965090153*^9, "TimeStartLocal" -> 
-        3.9715220300932111`17.351531965090153*^9, "InitialTimeEstimate" -> 
-        Indeterminate, "UpdateInterval" -> 1, "OuterUpdateInterval" -> 1, 
-        "Buttons" -> <|"Stop" :> (Parallel`Protected`$progressStop = True)|>, 
-        "Optional" -> {}, "ContainerQ" -> False, "CreateContainerQ" -> False, 
-        "CurrentContainer" -> None, "PreviousContainer" -> None, 
-        "ContainerName" -> None, "Cell" -> 
-        Hold[Progress`ProgressDump`cell$1633457], "Clock" -> Dynamic[None]|>, 
-       "OuterUpdateInterval"], TrackedSymbols :> {}],
-    ImageSizeCache->{350., {42.5830078125, 48.7822265625}}]}, All, 2],
-  DynamicModuleValues:>{}]], "PrintTemporary",
- ShowCellLabel->True,
- CellChangeTimes->{3.971518432113411*^9},
+ RowBox[{"{", 
+  RowBox[{
+   FractionBox["33", "263"], ",", 
+   FractionBox["163", "1315"], ",", 
+   FractionBox["1152", "9205"], ",", 
+   FractionBox["63", "526"], ",", 
+   FractionBox["230", "1841"], ",", 
+   FractionBox["2357", "18410"], ",", 
+   FractionBox["1152", "9205"], ",", 
+   FractionBox["226", "1841"], ",", 
+   FractionBox["1159", "9205"], ",", 
+   FractionBox["227", "1841"], ",", 
+   FractionBox["162", "1315"], ",", 
+   FractionBox["467", "3682"], ",", 
+   FractionBox["230", "1841"], ",", 
+   FractionBox["2267", "18410"], ",", 
+   FractionBox["233", "1841"], ",", 
+   FractionBox["2307", "18410"], ",", 
+   FractionBox["168", "1315"], ",", 
+   FractionBox["2369", "18410"], ",", 
+   FractionBox["2311", "18410"], ",", 
+   FractionBox["2341", "18410"]}], "}"}]], "Output",
+ CellChangeTimes->{3.971518576430622*^9},
  CellLabel->
-  "During evaluation of \
-In[387]:=",ExpressionUUID->"25715620-27cb-7944-8839-2a310bba27bd"]
+  "Out[394]=",ExpressionUUID->"d1cc408d-be1a-634e-aa2e-b6b16a226f50"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Mean", "@", "stedNodeCountImm"}], " ", "//", "N"}]], "Input",
+ CellChangeTimes->{{3.9715185960104218`*^9, 3.9715186044917393`*^9}},
+ CellLabel->
+  "In[396]:=",ExpressionUUID->"81103101-d667-364b-9cba-729d9ee057f6"],
+
+Cell[BoxData["0.12517653449212385`"], "Output",
+ CellChangeTimes->{{3.971518598177908*^9, 3.971518605117275*^9}},
+ CellLabel->
+  "Out[396]=",ExpressionUUID->"aaf2a1ba-98e7-2645-a538-ce2c58e90eef"]
 }, Open  ]]
 }, Open  ]]
 },
@@ -1832,8 +1749,12 @@ Cell[CellGroupData[{
 Cell[56642, 1327, 213, 4, 66, "Section",ExpressionUUID->"6fed0b4c-c817-0041-a636-9f9aeee641cf"],
 Cell[56858, 1333, 10487, 222, 1090, "Input",ExpressionUUID->"99d35d54-a708-c042-b51a-cd759e9909be"],
 Cell[CellGroupData[{
-Cell[67370, 1559, 2158, 57, 256, "Input",ExpressionUUID->"ffaa09c9-98b6-3045-a2d3-97c1e201ce23"],
-Cell[69531, 1618, 6957, 124, 113, "PrintTemporary",ExpressionUUID->"25715620-27cb-7944-8839-2a310bba27bd"]
+Cell[67370, 1559, 2184, 58, 256, "Input",ExpressionUUID->"ffaa09c9-98b6-3045-a2d3-97c1e201ce23"],
+Cell[69557, 1619, 929, 25, 46, "Output",ExpressionUUID->"d1cc408d-be1a-634e-aa2e-b6b16a226f50"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[70523, 1649, 249, 5, 28, "Input",ExpressionUUID->"81103101-d667-364b-9cba-729d9ee057f6"],
+Cell[70775, 1656, 196, 3, 32, "Output",ExpressionUUID->"aaf2a1ba-98e7-2645-a538-ce2c58e90eef"]
 }, Open  ]]
 }, Open  ]]
 }
